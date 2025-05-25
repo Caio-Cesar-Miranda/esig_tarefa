@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Gestão de Tarefas</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          crossorigin="anonymous" />
+</h:head>
+
+<h:body>
+<div class="container py-5">
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Cadastro de Tarefa</h4>
+        </div>
+        <div class="card-body">
+            <h:form>
+                <h:messages globalOnly="true" layout="list" styleClass="alert alert-danger mb-3" />
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Título:</label>
+                        <h:inputText value="#{tarefaBean.tarefa.titulo}" styleClass="form-control" />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Descrição:</label>
+                        <h:inputText value="#{tarefaBean.tarefa.descricao}" styleClass="form-control" />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+    					<label class="form-label">Responsável:</label>
+    					<h:selectOneMenu value="#{tarefaBean.tarefa.responsavel}" styleClass="form-select">
+        				<f:selectItem itemValue="" itemLabel="Selecione" noSelectionOption="true"/>
+        				<f:selectItems value="#{tarefaBean.listaResponsaveis}" />
+   						</h:selectOneMenu>
+					</div>
+
+
+                    <div class="col-md-6 mb-3">
+    					<label class="form-label">Deadline:</label>
+    					<h:inputText value="#{tarefaBean.tarefa.deadline}" styleClass="form-control" />
+					</div>
+
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Prioridade:</label>
+                        <h:selectOneMenu value="#{tarefaBean.tarefa.prioridade}" styleClass="form-select">
+                            <f:selectItem itemValue="" itemLabel="Selecione" noSelectionOption="true"/>
+                            <f:selectItem itemValue="Alta" itemLabel="Alta"/>
+                            <f:selectItem itemValue="Média" itemLabel="Média"/>
+                            <f:selectItem itemValue="Baixa" itemLabel="Baixa"/>
+                        </h:selectOneMenu>
+                    </div>
+                </div>
+
+                <h:commandButton value="Salvar" action="#{tarefaBean.salvar}" styleClass="btn btn-primary mt-2" />
+            </h:form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Lista de Tarefas</h4>
+            <h:form>
+                <div class="d-flex align-items-center">
+                    <h:selectOneMenu value="#{tarefaBean.filtroSituacao}" styleClass="form-select me-2">
+                        <f:selectItem itemValue="Em andamento" itemLabel="Em andamento"/>
+                        <f:selectItem itemValue="Concluída" itemLabel="Concluída"/>
+                    </h:selectOneMenu>
+                    <h:commandButton value="Filtrar" action="#{tarefaBean.listar}" styleClass="btn btn-outline-light" />
+                </div>
+            </h:form>
+        </div>
+        <div class="card-body p-0">
+            <h:form>
+                <h:dataTable value="#{tarefaBean.lista}" var="t" styleClass="table table-striped table-bordered mb-0">
+
+    <h:column>
+        <f:facet name="header">Id</f:facet>#{t.id}
+    </h:column>
+
+    <h:column>
+        <f:facet name="header">Título</f:facet>#{t.titulo}
+    </h:column>
+
+    <h:column>
+        <f:facet name="header">Responsável</f:facet>#{t.responsavel}
+    </h:column>
+
+    <h:column>
+        <f:facet name="header">Prioridade</f:facet>#{t.prioridade}
+    </h:column>
+
+    <h:column>
+        <f:facet name="header">Deadline</f:facet>#{t.deadline}
+    </h:column>
+
+    <h:column>
+        <f:facet name="header">Situação</f:facet>#{t.situacao}
+    </h:column>
+
+    <h:column>
+        <f:facet name="header">Ações</f:facet>
+        <div class="d-flex gap-1">
+            <h:commandButton value="Editar" action="#{tarefaBean.editar(t)}" styleClass="btn btn-warning btn-sm" />
+            <h:commandButton value="Remover" action="#{tarefaBean.remover(t.id)}" styleClass="btn btn-danger btn-sm" />
+            <h:commandButton value="Concluir" action="#{tarefaBean.concluir(t.id)}"
+                             rendered="#{t.situacao eq 'Em andamento'}"
+                             styleClass="btn btn-success btn-sm" />
+        </div>
+    </h:column>
+
+</h:dataTable>
+
+            </h:form>
+        </div>
+    </div>
+
+</div>
+</h:body>
+</html>
